@@ -1,4 +1,3 @@
-from __future__ import print_function
 from telegram import Update, ParseMode, Poll, InlineKeyboardButton, InlineKeyboardMarkup, replymarkup, update
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext, dispatcher,CommandHandler
 from binance.client import Client
