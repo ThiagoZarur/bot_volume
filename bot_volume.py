@@ -19,12 +19,14 @@ my_city_time = datetime.now(my_city_timezone)
 client = Client(API_KEY,API_SECRET)
 
 
-def detector_trans():
-        
+def detector_trans(update:Updater,context:CallbackContext):
+        while True:
+                #List of watchlist
                 tickers = ['BTCUSDT', 'ETHUSDT','MATICUSDT','ZRXUSDT','DOTUSDT','XLMUSDT']
                 for ticker in tickers:
                         pair = ticker
 
+                        #Accessing the function of the API-Binance
                         symbol = client.get_recent_trades(symbol=(pair),limit=1)        
                         for trans in symbol:
                                 quantity = float(trans['qty'])
@@ -32,19 +34,25 @@ def detector_trans():
                                 buy_sell = bool(trans['isBuyerMaker'])
                                 total_usd = quantity * price
 
+                                #Filter to the transactional volume 
                                 if total_usd >= 1000 and buy_sell == False:
-                                        print(f'''Moneda: {pair}
+                                        update.message.reply_text(f'''Moneda: {pair}
 BIG BUY DETECTED {emoji_buy}
 Cantidad en monedas: {quantity}
 Precio: {price}
 Cantidad en usd: {total_usd}''')
+                                        #Remove variables so as not to accumulate data
+                                        del(pair)
+                                        
 
                                 elif total_usd >= 1000 and buy_sell == True:
-                                        print(f'''Moneda: {pair}
+                                        update.message.reply_text(f'''Moneda: {pair}
 BIG SELL DETECTED {emoji_sell}
 Cantidad en monedas: {quantity}
 Precio: {price}
 Cantidad en usd: {total_usd}''')
+                                        #Remove variables so as not to accumulate data
+                                        del(pair)
 
                                 
 def run():
@@ -52,13 +60,13 @@ def run():
         dispatcher = updater.dispatcher
 
         dispatcher.add_handler(CommandHandler('start',detector_trans))
-        # dispatcher.add_handler(CommandHandler('usd',to_usd))
 
         updater.start_polling()
         updater.idle()
 
 
 if __name__ == '__main__':   
-     detector_trans()
+     run()
+     #for stop the bot, press in console CTRL + C
      
 
