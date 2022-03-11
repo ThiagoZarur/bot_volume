@@ -20,8 +20,7 @@ client = Client(API_KEY,API_SECRET)
 
 
 def detector_trans(pair):
-                #hacerlo en una función y solo pasarle los argumentos con los tickers que varien
-                #con el decorador puedo aplicarlo para cada una de las funciones tomar el parametro multiplicar el qty por el price en cada una 
+        while True:
                 symbol = client.get_recent_trades(symbol=(pair),limit=1)        
                 for trans in symbol:
                         quantity = float(trans['qty'])
@@ -29,16 +28,20 @@ def detector_trans(pair):
                         buy_sell = bool(trans['isBuyerMaker'])
                         total_usd = quantity * price
 
-                        if total_usd >= 100 or buy_sell == False:
-                                print(f'''BIG BUY DETECTED {emoji_buy}
+                        if total_usd >= 1000 and buy_sell == False:
+                                print(f'''Moneda: {pair}
+BIG BUY DETECTED {emoji_buy}
 Cantidad en monedas: {quantity}
-Cantidad en usd: {total_usd}
-Precio: {price}''')
-                        elif total_usd >= 100 or buy_sell == True:
-                                print(f''' BIG SELL DETECTED {emoji_sell}
+Precio: {price}
+Cantidad en usd: {total_usd}''')
+
+                        elif total_usd >= 1000 and buy_sell == True:
+                                print(f'''Moneda: {pair}
+BIG SELL DETECTED {emoji_sell}
 Cantidad en monedas: {quantity}
-Cantidad en usd: {total_usd}
-Precio: {price}''')
+Precio: {price}
+Cantidad en usd: {total_usd}''')
+
                                 
 def run():
         updater = Updater(TOKEN)
@@ -51,5 +54,7 @@ def run():
         updater.idle()
 
 
-if __name__ == '__main__':
-     detector_trans('ETHUSDT')
+if __name__ == '__main__':   
+     detector_trans('BTCUSDT')
+     
+
