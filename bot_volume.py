@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext, dispatcher,CommandHandler
-from binance.client import Client, AsyncClient
+from binance.client import Client
 from decouple import config
 import time 
 from datetime import datetime
@@ -19,24 +19,28 @@ my_city_time = datetime.now(my_city_timezone)
 client = Client(API_KEY,API_SECRET)
 
 
-def detector_trans(pair):
-        while True:
-                symbol = client.get_recent_trades(symbol=(pair),limit=1)        
-                for trans in symbol:
-                        quantity = float(trans['qty'])
-                        price = float(trans['price'])
-                        buy_sell = bool(trans['isBuyerMaker'])
-                        total_usd = quantity * price
+def detector_trans():
+        
+                tickers = ['BTCUSDT', 'ETHUSDT','MATICUSDT','ZRXUSDT','DOTUSDT','XLMUSDT']
+                for ticker in tickers:
+                        pair = ticker
 
-                        if total_usd >= 1000 and buy_sell == False:
-                                print(f'''Moneda: {pair}
+                        symbol = client.get_recent_trades(symbol=(pair),limit=1)        
+                        for trans in symbol:
+                                quantity = float(trans['qty'])
+                                price = float(trans['price'])
+                                buy_sell = bool(trans['isBuyerMaker'])
+                                total_usd = quantity * price
+
+                                if total_usd >= 1000 and buy_sell == False:
+                                        print(f'''Moneda: {pair}
 BIG BUY DETECTED {emoji_buy}
 Cantidad en monedas: {quantity}
 Precio: {price}
 Cantidad en usd: {total_usd}''')
 
-                        elif total_usd >= 1000 and buy_sell == True:
-                                print(f'''Moneda: {pair}
+                                elif total_usd >= 1000 and buy_sell == True:
+                                        print(f'''Moneda: {pair}
 BIG SELL DETECTED {emoji_sell}
 Cantidad en monedas: {quantity}
 Precio: {price}
@@ -55,6 +59,6 @@ def run():
 
 
 if __name__ == '__main__':   
-     detector_trans('BTCUSDT')
+     detector_trans()
      
 
