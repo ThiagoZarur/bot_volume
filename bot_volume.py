@@ -20,10 +20,9 @@ client = Client(API_KEY,API_SECRET)
 
 
 def detector_trans(update:Updater,context:CallbackContext):
-        while True:
-                #List of watchlist
-                tickers = ['BTCUSDT', 'ETHUSDT','MATICUSDT','ADAUSDT','DOTUSDT','XLMUSDT','ZRXUSDT','LINKUSDT','SOLUSDT','MANAUSDT','SUSHIUSDT','UNIUSDT']
-                for ticker in tickers:
+        while True: 
+                watchlist = ['BTCUSDT', 'ETHUSDT','MATICUSDT','ADAUSDT','DOTUSDT','XLMUSDT','ZRXUSDT','LINKUSDT','SOLUSDT','MANAUSDT','SUSHIUSDT','UNIUSDT']
+                for ticker in watchlist:
                         pair = ticker
 
                         #Accessing the function of the API-Binance
@@ -35,7 +34,7 @@ def detector_trans(update:Updater,context:CallbackContext):
                                 total_usd = quantity * price
 
                                 #Filter to the transactional volume 
-                                if total_usd >= 1000000 and buy_sell == False:
+                                if total_usd >= 300000 and buy_sell == False:
                                         update.message.reply_text(f'''Moneda: {pair}
 BIG BUY DETECTED {emoji_buy}
 Cantidad en monedas: {quantity}
@@ -45,7 +44,7 @@ Cantidad en usd: {total_usd}''')
                                         del(pair)
                                         
 
-                                elif total_usd >=  1000000 and buy_sell == True:
+                                elif total_usd >=  300000 and buy_sell == True:
                                         update.message.reply_text(f'''Moneda: {pair}
 BIG SELL DETECTED {emoji_sell}
 Cantidad en monedas: {quantity}
